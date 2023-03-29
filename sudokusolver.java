@@ -4,12 +4,21 @@ public class sudokusolver {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         //  take a puzzle as input
-        int sudoku[][] = new int[9][9];
-        for(int i =0 ; i<9; i++){
-            for(int j=0; j <9 ; j++){
-                sudoku[i][j] = sc.nextInt();
-            }
-        }
+        // int sudoku[][] = new int[9][9];
+        // for(int i =0 ; i<9; i++){
+        //     for(int j=0; j <9 ; j++){
+        //         sudoku[i][j] = sc.nextInt();
+        //     }
+        // }
+        int sudoku[][] = { { 3, 0, 6, 5, 0, 8, 4, 0, 0 },
+        { 5, 2, 0, 0, 0, 0, 0, 0, 0 },
+        { 0, 8, 7, 0, 0, 0, 0, 3, 1 },
+        { 0, 0, 3, 0, 1, 0, 0, 8, 0 },
+        { 9, 0, 0, 8, 6, 3, 0, 0, 5 },
+        { 0, 5, 0, 0, 9, 0, 6, 0, 0 },
+        { 1, 3, 0, 0, 0, 0, 2, 5, 0 },
+        { 0, 0, 0, 0, 0, 0, 0, 7, 4 },
+        { 0, 0, 5, 2, 0, 6, 3, 0, 0 } }; 
         //  input done
         solve(sudoku, 0, 0);
         // 
@@ -29,27 +38,36 @@ public class sudokusolver {
         }
     }
     // backtrack function
-    public static void solve(int[][] sudoku, int i, int j){
+    public static int solve(int[][] sudoku, int i, int j){
         if(i==8 && j ==9){
-            return;
+            return 1;
         }
         if(j==9){
             i = i+1;
             j=0;
         }
         if(sudoku[i][j] != 0){
-            solve(sudoku, i, j+1);
+            return solve(sudoku, i, j+1);
         }
         if(sudoku[i][j] == 0){
-            for(int v= 1 ; v<10 ; v++){
+            for(int v= 1 ; v<11 ; v++){
                 // System.out.println("post");
-                if(check(sudoku,i,j,v)){
+                if(v == 10){
+                    sudoku[i][j]=0;
+                    return 0;
+                }
+                boolean c = check(sudoku, i, j, v);
+                int a  = 0;
+                if(c){
                     sudoku[i][j] = v;
-                    solve(sudoku, i, j+1);
-                } 
+                    a = solve(sudoku, i, j+1);
+                }
+                if(a == 1){
+                    return a;
+                }
             }
         }
-        return;
+        return 0;
     }
     public static boolean check(int[][] sudoku, int i , int j, int v){
         int val = v;
@@ -65,6 +83,20 @@ public class sudokusolver {
             if(val == sudoku[x][j]){
                 return false;
             }
+        }
+        //  checking boxes
+        int x = (i/3)*3;
+        int y = (j/3)*3;
+        int x1 = x +3;
+        int y1 = y+3;
+        while(x < x1){
+            while(y<y1){
+                if(sudoku[x][y] == val){
+                    return false;
+                }
+                y++;
+            }
+            x++;
         }
         return true;
     }
