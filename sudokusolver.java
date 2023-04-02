@@ -1,30 +1,25 @@
+import java.util.Random;
 import java.util.Scanner;
 
 public class sudokusolver {
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
         //  take a puzzle as input
-        // int sudoku[][] = new int[9][9];
-        // for(int i =0 ; i<9; i++){
-        //     for(int j=0; j <9 ; j++){
-        //         sudoku[i][j] = sc.nextInt();
-        //     }
-        // }
-        int sudoku[][] = {
-            {0,5,2,6,0,0,9,0,0},
-            {0,9,0,5,0,0,0,0,4},
-            {0,0,0,0,0,0,0,8,0},
-            {7,0,0,0,8,0,0,3,0},
-            {0,6,0,0,0,0,0,0,0},
-            {0,0,0,0,0,0,0,0,0},
-            {0,0,0,9,0,0,5,0,0},
-            {3,0,0,0,7,0,0,0,0},
-            {8,0,0,0,0,0,0,0,0}
-        };
-        //  input done
+        int sudoku[][] = generatesudoku();
+        // printing puzzle
+        System.out.println("THE SUDOKU");
+        for(int i=0 ; i<9 ; i++){
+            for(int j=0 ; j<9 ; j++){
+                System.out.print(sudoku[i][j]+" ");
+            }
+            System.out.println("");
+        }
+        System.out.println(" ");
+        // 
+        // solving sudoku
         solve(sudoku, 0, 0);
         // 
         // printing sudoku
+        System.out.println("SOLUTION");
         for(int i= 0 ; i <9 ; i++){
             for(int j =0 ; j<9 ; j++){
                 System.out.print(sudoku[i][j]+" ");
@@ -32,12 +27,12 @@ public class sudokusolver {
             System.out.println("");
         }
         // validate if it is correct or not
-        if(validation(sudoku)){
-            System.out.println("Correct");
-        }
-        else{
-            System.out.println("false");
-        }
+        // if(validation(sudoku)){
+        //     System.out.println("Correct");
+        // }
+        // else{
+        //     System.out.println("false");
+        // }
     }
     // backtrack function
     public static int solve(int[][] sudoku, int i, int j){
@@ -124,5 +119,32 @@ public class sudokusolver {
             }
         }
         return true;
+    }
+    public static int[][] generatesudoku(){
+        Random r = new Random();
+        int sudoku[][] = new int[9][9];
+        // fixing numbers in the gird
+        // fixing number in row
+        boolean check[] = new boolean[10];
+        for(int i=0 ; i<9 ; i++){
+            int n = r.nextInt(10);
+            if(!check[n]){
+                check[n] = true;
+                sudoku[0][i] = n;
+            }
+        }
+        solve(sudoku, 0, 0);
+        // we have solved sudoku and now we need to remove numbers
+        // removing numbers
+        for(int i=0 ; i<9 ; i++){
+            for(int j=0 ; j<9 ;j++){
+                int n = r.nextInt(2);
+                if(n==0){
+                    sudoku[i][j] = 0;
+                }
+            }
+        }
+        
+        return sudoku;
     }
 }
